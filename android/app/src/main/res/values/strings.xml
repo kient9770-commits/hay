@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Chuc Mung 20-10</string>
+    <string name="title_activity_main">Chuc Mung 20-10</string>
+    <string name="package_name">com.chucmung2010.app</string>
+    <string name="custom_url_scheme">com.chucmung2010.app</string>
+</resources>

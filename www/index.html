@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gửi Lời Chúc 20/10 Yêu Thương 🌸</title>
+  
+  <!-- Cấu hình PWA để iOS/Android nhận diện làm App -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Chúc 20/10">
+
+  <!-- Tailwind CSS & Fonts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    body { font-family: 'Quicksand', sans-serif; overflow-x: hidden; }
+    .font-cursive { font-family: 'Dancing Script', cursive; }
+    canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
+    .glass-card { background: rgba(255, 255, 255, 0.88); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.6); }
+    @keyframes gift-glow {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 15px rgba(244, 63, 94, 0.6)); }
+      50% { transform: scale(1.08); filter: drop-shadow(0 0 25px rgba(244, 63, 94, 0.9)); }
+    }
+    .pulse-animation { animation: gift-glow 2s infinite ease-in-out; }
+  </style>
+</head>
+<body id="bgBody" class="bg-gradient-to-br from-rose-100 via-pink-100 to-purple-200 min-h-screen flex items-center justify-center p-4 relative transition-colors duration-700">
+
+  <canvas id="effectCanvas"></canvas>
+
+  <div class="max-w-xl w-full glass-card rounded-3xl p-6 md:p-8 shadow-2xl relative z-20 text-center space-y-6 border border-white/50 my-6">
+    
+    <!-- Tiêu đề -->
+    <div>
+      <span class="px-3 py-1 bg-rose-500/10 text-rose-600 rounded-full text-xs font-bold uppercase tracking-wider">
+        Special Edition 20/10 ✨
+      </span>
+      <h1 class="text-3xl md:text-4xl font-extrabold text-rose-600 mt-2">
+        Gửi Lời Chúc Phụ Nữ Việt Nam 💐
+      </h1>
+    </div>
+
+    <!-- BƯỚC 1: Chọn Đối Tượng -->
+    <div class="space-y-2">
+      <label class="text-xs font-bold text-gray-500 uppercase tracking-wider block text-left">1. Bạn muốn gửi lời chúc tới ai?</label>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+        <button onclick="selectCategory('mom')" id="btn-mom" class="category-btn p-3 bg-white hover:bg-rose-50 border border-rose-200 rounded-2xl text-xs font-bold text-gray-700 transition flex flex-col items-center gap-1 shadow-sm">
+          <span class="text-2xl">👩‍👦</span> Mẹ Yêu
+        </button>
+        <button onclick="selectCategory('lover')" id="btn-lover" class="category-btn p-3 bg-white hover:bg-rose-50 border border-rose-200 rounded-2xl text-xs font-bold text-gray-700 transition flex flex-col items-center gap-1 shadow-sm">
+          <span class="text-2xl">💖</span> Người Yêu / Vợ
+        </button>
+        <button onclick="selectCategory('teacher')" id="btn-teacher" class="category-btn p-3 bg-white hover:bg-rose-50 border border-rose-200 rounded-2xl text-xs font-bold text-gray-700 transition flex flex-col items-center gap-1 shadow-sm">
+          <span class="text-2xl">👩‍🏫</span> Cô Giáo
+        </button>
+        <button onclick="selectCategory('friend')" id="btn-friend" class="category-btn p-3 bg-white hover:bg-rose-50 border border-rose-200 rounded-2xl text-xs font-bold text-gray-700 transition flex flex-col items-center gap-1 shadow-sm">
+          <span class="text-2xl">🌸</span> Bạn Bè / Đ.Nghiệp
+        </button>
+      </div>
+    </div>
+
+    <!-- BƯỚC 2: Nhập Tên Người Nhận (Cá nhân hóa) -->
+    <div class="space-y-1">
+      <input type="text" id="receiverName" oninput="updateGreeting()" placeholder="Nhập tên người nhận (VD: Mẹ Lan, Em Thu...)" 
+             class="w-full px-4 py-2.5 bg-white/80 border border-rose-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-rose-400 text-center font-semibold text-rose-800 placeholder-gray-400">
+    </div>
+
+    <!-- Hộp quà Bí Mật -->
+    <div class="py-2 flex justify-center">
+      <button id="giftBtn" onclick="openGift()" class="pulse-animation bg-gradient-to-r from-rose-500 to-pink-500 text-white p-5 rounded-full shadow-xl hover:scale-105 active:scale-95 transition">
+        <i class="fa-solid fa-gift text-3xl"></i>
+      </button>
+    </div>
+
+    <!-- Lời Chúc Gõ Tự Động -->
+    <div class="bg-white/90 p-5 rounded-2xl shadow-inner border border-rose-100 min-h-[130px] flex items-center justify-center">
+      <p id="typedGreeting" class="font-cursive text-2xl text-rose-800 leading-relaxed">
+        Hãy chọn đối tượng & bấm hộp quà để nhận lời chúc nhé! ✨
+      </p>
+    </div>
+
+    <!-- Điều khiển Âm nhạc & Đổi hiệu ứng -->
+    <div class="flex flex-wrap justify-center gap-2 pt-2">
+      <button onclick="nextGreeting()" class="px-3.5 py-2 bg-white hover:bg-rose-50 text-rose-600 border border-rose-200 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
+        <i class="fa-solid fa-arrows-rotate"></i> Câu Chúc Khác
+      </button>
+      <button onclick="toggleAudio()" id="musicBtn" class="px-3.5 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-md">
+        <i class="fa-solid fa-music"></i> Bật Nhạc 🎵
+      </button>
+    </div>
+
+  </div>
+
+  <audio id="bgMusic" loop src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3"></audio>
+
+  <script>
+    // Kho Lời Chúc theo danh mục
+    const dataGreetings = {
+      mom: [
+        "Chúc Mẹ yêu của con ngày 20/10 thật nhiều sức khỏe, luôn bình an và mỉm cười rạng rỡ. Cảm ơn Mẹ vì tất cả! 💖",
+        "Mẹ là người phụ nữ tuyệt vời nhất cuộc đời con. Chúc Mẹ mãi xinh đẹp, trẻ trung và luôn hạnh phúc bên gia đình! 💐"
+      ],
+      lover: [
+        "Chúc em yêu ngày 20/10 ngập tràn niềm vui, xinh đẹp rạng rỡ và luôn là cô gái hạnh phúc nhất thế giới! 💖🌹",
+        "Cảm ơn em đã đến và làm cuộc sống của anh thêm ngọt ngào. Chúc em 20/10 nhận được thật nhiều quà và yêu thương! 🎁✨"
+      ],
+      teacher: [
+        "Kính chúc Cô ngày 20/10 thật nhiều sức khỏe, hạnh phúc và luôn giữ vững ngọn lửa nhiệt huyết với nghề giáo! 👩‍🏫🌸",
+        "Cảm ơn Cô đã tận tụy dìu dắt chúng em. Chúc Cô luôn xinh đẹp, rạng rỡ và tràn đầy niềm vui trong cuộc sống! 💐"
+      ],
+      friend: [
+        "Chúc bạn ngày 20/10 nhận được thật nhiều hoa, nhiều quà, luôn tươi trẻ, kiêu hãnh và tỏa sáng theo cách riêng! ✨🌸",
+        "Chúc chị em ngày 20/10 công việc thuận lợi, xinh đẹp rạng ngời và sớm tìm được một nửa yêu thương nhé! 💃🎉"
+      ]
+    };
+
+    let currentCategory = 'lover';
+    let currentMsgIndex = 0;
+    let charIndex = 0;
+    const typedElem = document.getElementById('typedGreeting');
+
+    function selectCategory(cat) {
+      currentCategory = cat;
+      document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('bg-rose-500', 'text-white'));
+      document.getElementById('btn-' + cat).classList.add('bg-rose-500', 'text-white');
+      currentMsgIndex = 0;
+      openGift();
+    }
+
+    function updateGreeting() {
+      openGift();
+    }
+
+    function openGift() {
+      typedElem.innerHTML = "";
+      charIndex = 0;
+      typeWriter();
+    }
+
+    function typeWriter() {
+      const name = document.getElementById('receiverName').value.trim();
+      const prefix = name ? `${name} thân yêu: ` : "";
+      const rawText = dataGreetings[currentCategory][currentMsgIndex];
+      const fullText = prefix + rawText;
+
+      if (charIndex < fullText.length) {
+        typedElem.innerHTML += fullText.charAt(charIndex);
+        charIndex++;
+        setTimeout(typeWriter, 35);
+      }
+    }
+
+    function nextGreeting() {
+      const list = dataGreetings[currentCategory];
+      currentMsgIndex = (currentMsgIndex + 1) % list.length;
+      openGift();
+    }
+
+    // Engine Hiệu Ứng Canvas (Cánh hoa / Trái tim)
+    const canvas = document.getElementById('effectCanvas');
+    const ctx = canvas.getContext('2d');
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+    let particles = [];
+
+    function initParticles() {
+      particles = [];
+      for (let i = 0; i < 50; i++) {
+        particles.push({
+          x: Math.random() * width, y: Math.random() * height,
+          size: Math.random() * 12 + 8,
+          speedY: Math.random() * 1.5 + 0.8,
+          speedX: Math.sin(Math.random() * Math.PI) * 1,
+          opacity: Math.random() * 0.7 + 0.3
+        });
+      }
+    }
+
+    function renderCanvas() {
+      ctx.clearRect(0, 0, width, height);
+      particles.forEach((p) => {
+        p.y += p.speedY; p.x += Math.sin(p.y / 30) * 0.8;
+        if (p.y > height + 20) { p.y = -20; p.x = Math.random() * width; }
+        ctx.save(); ctx.globalAlpha = p.opacity;
+        ctx.fillStyle = '#f43f5e'; ctx.beginPath();
+        ctx.ellipse(p.x, p.y, p.size, p.size / 2, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.restore();
+      });
+      requestAnimationFrame(renderCanvas);
+    }
+
+    // Xử lý âm nhạc
+    const bgMusic = document.getElementById('bgMusic');
+    let isPlaying = false;
+    function toggleAudio() {
+      const btn = document.getElementById('musicBtn');
+      if (!isPlaying) {
+        bgMusic.play(); btn.innerHTML = `<i class="fa-solid fa-pause"></i> Tắt Nhạc`;
+        btn.classList.replace('bg-rose-600', 'bg-gray-700'); isPlaying = true;
+      } else {
+        bgMusic.pause(); btn.innerHTML = `<i class="fa-solid fa-music"></i> Bật Nhạc 🎵`;
+        btn.classList.replace('bg-gray-700', 'bg-rose-600'); isPlaying = false;
+      }
+    }
+
+    window.onload = () => {
+      selectCategory('lover');
+      initParticles();
+      renderCanvas();
+    };
+  </script>
+</body>
+</html>
