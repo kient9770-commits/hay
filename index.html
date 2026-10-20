@@ -5,9 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Gửi Trọn Yêu Thương - 20/10 🌸</title>
 
-  <!-- PWA meta tags -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <!-- Lệnh cấm lưu Cache cứng -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
 
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
@@ -19,7 +20,6 @@
     .fade-in { animation: fadeIn 0.4s ease-out forwards; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* Highlight nút chọn trên mobile */
     .btn-selected {
       background-color: #ffe4e6 !important;
       border-color: #f43f5e !important;
@@ -28,11 +28,16 @@
     }
   </style>
 </head>
-  <!-- Chống lưu Cache: Buộc điện thoại người nhận luôn tải bản mới nhất -->
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
 <body class="bg-rose-50 text-gray-800 min-h-screen p-3 sm:p-4 flex items-center justify-center relative overflow-x-hidden">
+
+  <!-- TỰ ĐỘNG XÓA BỘ NHỚ TẠM (CACHE) CỦA BẤT KỲ MÁY NÀO KHI TRUY CẬP -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      caches.keys().then(function(names) {
+        for (let name of names) caches.delete(name);
+      });
+    }
+  </script>
 
   <!-- Canvas cánh hoa falling -->
   <canvas id="canvas-petals" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0;"></canvas>
@@ -139,7 +144,7 @@
       ]
     };
 
-    let selectedCategory = 'sister'; // Mặc định chọn Chị/Em gái
+    let selectedCategory = 'sister';
 
     function selectCategory(cat) {
       selectedCategory = cat;
@@ -148,7 +153,6 @@
       if (activeBtn) activeBtn.classList.add('btn-selected');
     }
 
-    // Tự chọn mặc định Chị/Em gái khi tải trang
     selectCategory('sister');
 
     function generateWish() {
@@ -181,7 +185,7 @@
       document.getElementById('screen-setup').classList.remove('hidden');
     }
 
-    // Canvas nhẹ nhàng cho di động
+    // Canvas hiệu ứng cánh hoa
     const canvas = document.getElementById('canvas-petals');
     const ctx = canvas.getContext('2d');
     let w = canvas.width = window.innerWidth;
