@@ -2,103 +2,213 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Gửi Trọn Yêu Thương - 20/10 🌸</title>
 
-  <!-- Cấu hình PWA & Mobile -->
+  <!-- PWA meta tags -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Chúc 20/10">
 
-  <!-- Tailwind CSS & Fonts -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
 
   <style>
-    body { font-family: 'Montserrat', sans-serif; }
+    body { font-family: 'Montserrat', sans-serif; touch-action: manipulation; }
     .font-cursive { font-family: 'Dancing Script', cursive; }
     
-    /* Hiệu ứng chuyển cảnh nhẹ nhàng */
-    .fade-in { animation: fadeIn 0.5s ease-in-out forwards; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .fade-in { animation: fadeIn 0.4s ease-out forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* Style riêng cho nút được chọn */
+    /* Highlight nút chọn trên mobile */
     .btn-selected {
-      background-color: #fce7f3 !important; /* bg-rose-100 */
-      border-color: #f43f5e !important;     /* border-rose-500 */
-      color: #e11d48 !important;          /* text-rose-600 */
+      background-color: #ffe4e6 !important;
+      border-color: #f43f5e !important;
+      color: #e11d48 !important;
+      font-weight: 700 !important;
     }
   </style>
 </head>
-<body class="bg-rose-50 text-gray-800 min-h-screen p-4 flex items-center justify-center">
+<body class="bg-rose-50 text-gray-800 min-h-screen p-3 sm:p-4 flex items-center justify-center relative overflow-x-hidden">
 
-  <!-- Hiệu ứng nền Canvas: Cánh hoa falling -->
-  <canvas id="canvas-petals" class="fixed top-0 left-0 w-full h-full pointer-events-none z-0"></canvas>
+  <!-- Canvas cánh hoa falling -->
+  <canvas id="canvas-petals" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0;"></canvas>
 
-  <main class="w-full max-w-md bg-white p-6 md:p-8 rounded-3xl shadow-xl border border-rose-100 relative z-10 transition-all duration-300">
+  <main class="w-full max-w-md bg-white/95 backdrop-blur-sm p-5 sm:p-7 rounded-3xl shadow-xl border border-rose-100 relative z-10 transition-all">
     
-    <!-- TIÊU ĐỀ -->
-    <header class="text-center mb-6">
+    <header class="text-center mb-5">
       <h1 class="text-3xl font-bold text-rose-600 font-cursive">Gửi Trọn Yêu Thương</h1>
-      <p class="text-sm font-semibold text-rose-400">CHÚC MỪNG NGÀY PHỤ NỮ VIỆT NAM 20/10</p>
+      <p class="text-xs font-bold text-rose-400 tracking-wide mt-1">CHÚC MỪNG NGÀY PHỤ NỮ VIỆT NAM 20/10</p>
     </header>
 
-    <!-- MÀN HÌNH 1: NHẬP THÔNG TIN & CHỌN ĐỐI TƯỢNG -->
-    <div id="screen-setup" class="space-y-5 fade-in">
+    <!-- MÀN HÌNH 1: CẤU HÌNH -->
+    <div id="screen-setup" class="space-y-4 fade-in">
       
-      <!-- Nhập tên bạn -->
       <div>
-        <label class="block text-xs font-bold text-gray-600 mb-1.5 ml-1">BƯỚC 1: NHẬP TÊN BẠN</label>
-        <input type="text" id="sender-name" placeholder="Ví dụ: Nguyễn Văn A..." class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-rose-300 transition shadow-inner">
+        <label class="block text-xs font-bold text-gray-600 mb-1 ml-1">BƯỚC 1: NHẬP TÊN BẠN</label>
+        <input type="text" id="sender-name" placeholder="Ví dụ: Nguyễn Văn A..." class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-rose-400 font-semibold text-gray-700 shadow-inner">
       </div>
 
-      <!-- Chọn đối tượng -->
       <div>
-        <label class="block text-xs font-bold text-gray-600 mb-2.5 ml-1">BƯỚC 2: CHỌN ĐỐI TƯỢNG</label>
-        <div class="grid grid-cols-2 gap-3">
-          <button onclick="selectCategory('mom')" id="btn-mom" class="category-btn p-3.5 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-semibold text-gray-700 hover:bg-rose-50 hover:border-rose-300 transition flex items-center gap-2.5">
+        <label class="block text-xs font-bold text-gray-600 mb-2 ml-1">BƯỚC 2: CHỌN ĐỐI TƯỢNG</label>
+        <div class="grid grid-cols-2 gap-2.5">
+          <button type="button" onclick="selectCategory('mom')" id="btn-mom" class="category-btn p-3 bg-gray-50 border border-gray-200 rounded-2xl text-xs sm:text-sm font-semibold text-gray-700 active:bg-rose-100 transition flex items-center gap-2">
             👩‍👦 Mẹ Yêu
           </button>
-          <button onclick="selectCategory('lover')" id="btn-lover" class="category-btn p-3.5 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-semibold text-gray-700 hover:bg-rose-50 hover:border-rose-300 transition flex items-center gap-2.5">
+          <button type="button" onclick="selectCategory('lover')" id="btn-lover" class="category-btn p-3 bg-gray-50 border border-gray-200 rounded-2xl text-xs sm:text-sm font-semibold text-gray-700 active:bg-rose-100 transition flex items-center gap-2">
             💖 Người Yêu
           </button>
-          <!-- DANH MỤC CHỊ/EM GÁI MỚI -->
-          <button onclick="selectCategory('sister')" id="btn-sister" class="category-btn p-3.5 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-semibold text-gray-700 hover:bg-rose-50 hover:border-rose-300 transition flex items-center gap-2.5">
+          <button type="button" onclick="selectCategory('sister')" id="btn-sister" class="category-btn p-3 bg-gray-50 border border-gray-200 rounded-2xl text-xs sm:text-sm font-semibold text-gray-700 active:bg-rose-100 transition flex items-center gap-2">
             💃 Chị/Em Gái
           </button>
-          <button onclick="selectCategory('teacher')" id="btn-teacher" class="category-btn p-3.5 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-semibold text-gray-700 hover:bg-rose-50 hover:border-rose-300 transition flex items-center gap-2.5">
+          <button type="button" onclick="selectCategory('teacher')" id="btn-teacher" class="category-btn p-3 bg-gray-50 border border-gray-200 rounded-2xl text-xs sm:text-sm font-semibold text-gray-700 active:bg-rose-100 transition flex items-center gap-2">
             👩‍🏫 Cô Giáo
           </button>
-          <button onclick="selectCategory('friend')" id="btn-friend" class="category-btn p-3.5 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-semibold text-gray-700 hover:bg-rose-50 hover:border-rose-300 transition flex items-center gap-2.5 col-span-2">
+          <button type="button" onclick="selectCategory('friend')" id="btn-friend" class="category-btn p-3 bg-gray-50 border border-gray-200 rounded-2xl text-xs sm:text-sm font-semibold text-gray-700 active:bg-rose-100 transition flex items-center gap-2 col-span-2 justify-center">
             🌷 Bạn Bè / Đồng Nghiệp
           </button>
         </div>
       </div>
 
-      <!-- Nút Tạo lời chúc -->
-      <button onclick="generateWish()" class="w-full py-4 bg-rose-600 text-white rounded-2xl font-bold text-base shadow-lg hover:bg-rose-700 active:scale-95 transition-all">
+      <button type="button" id="submit-btn" onclick="generateWish()" class="w-full py-3.5 bg-rose-600 active:bg-rose-700 text-white rounded-2xl font-bold text-sm sm:text-base shadow-lg transition active:scale-95 mt-2">
         TẠO LỜI CHÚC NGAY ✨
       </button>
     </div>
 
-    <!-- MÀN HÌNH 2: HIỂN THỊ THIỆP -->
-    <div id="screen-card" class="hidden space-y-5 fade-in">
+    <!-- MÀN HÌNH 2: KẾT QUẢ THIỆP -->
+    <div id="screen-card" class="hidden space-y-4 fade-in">
       
-      <!-- Thiệp chúc mừng -->
-      <div id="wish-card" class="bg-gradient-to-br from-rose-50 to-white border-4 border-rose-200 rounded-3xl p-6 text-center shadow-lg relative overflow-hidden transition-all duration-300">
-        <div class="text-4xl mb-3">🌸</div>
-        <h2 id="card-header" class="text-2xl font-bold text-rose-600 font-cursive mb-4">Mừng Ngày 20/10!</h2>
+      <div id="wish-card" class="bg-gradient-to-br from-rose-50 to-white border-2 border-rose-200 rounded-3xl p-5 text-center shadow-md relative overflow-hidden">
+        <div class="text-3xl mb-2">🌸</div>
+        <h2 id="card-header" class="text-2xl font-bold text-rose-600 font-cursive mb-3">Mừng Ngày 20/10!</h2>
         
-        <p id="card-message" class="text-gray-700 text-sm leading-relaxed italic min-h-[120px] flex items-center justify-center px-2">
+        <p id="card-message" class="text-gray-700 text-sm leading-relaxed italic min-h-[100px] flex items-center justify-center px-1 font-medium">
           "Lời chúc sẽ xuất hiện ở đây..."
         </p>
 
-        <div class="mt-5 pt-3 border-t border-rose-200/60 flex items-center justify-between text-xs text-rose-500 font-bold">
-          <span id="card-to">Gửi: Chị Gái</span>
-          <span id="card-from">Từ: [Tên bạn]</span>
+        <div class="mt-4 pt-3 border-t border-rose-200/60 flex items-center justify-between text-xs text-rose-500 font-bold">
+          <span id="card-to">Gửi: ...</span>
+          <span id="card-from">Từ: ...</span>
         </div>
       </div>
 
-      <!-- Các nút thao tác -->
-      <div class="grid grid-cols-2 gap-3">
-        <button onclick="generateWish()" class="py-3 px-4 bg-white border border-rose-30
+      <div class="grid grid-cols-2 gap-2">
+        <button type="button" onclick="generateWish()" class="py-3 px-2 bg-white border border-rose-300 text-rose-600 rounded-xl text-xs font-bold active:bg-rose-50 transition shadow-sm">
+          ĐỔI CÂU KHÁC 🔄
+        </button>
+        <button type="button" onclick="copyWish()" class="py-3 px-2 bg-white border border-rose-300 text-rose-600 rounded-xl text-xs font-bold active:bg-rose-50 transition shadow-sm">
+          SAO CHÉP LỜI CHÚC 📋
+        </button>
+      </div>
+
+      <button type="button" onclick="restartApp()" class="w-full py-3 bg-rose-100 text-rose-700 rounded-xl text-xs font-bold active:bg-rose-200 transition">
+        TẠO THIỆP MỚI ➕
+      </button>
+    </div>
+
+  </main>
+
+  <script>
+    const wishes = {
+      mom: [
+        "Nhân ngày 20/10, con chúc Mẹ luôn khỏe mạnh, hạnh phúc và bình an. Cảm ơn Mẹ đã luôn là bến đỗ bình yên của con! Mẹ ơi, con yêu Mẹ nhiều! 💖🌸",
+        "Mẹ kính yêu, con chúc Mẹ ngày 20/10 tràn ngập nụ cười, nhận được thật nhiều hoa và quà. Con mong Mẹ sống thật lâu bên con! 🌷✨",
+        "Chúc người phụ nữ tuyệt vời nhất thế gian của con ngày Phụ nữ Việt Nam 20/10 thật nhiều niềm vui. Cảm ơn Mẹ vì tất cả! 💐❤️"
+      ],
+      lover: [
+        "Chúc công chúa của anh ngày 20/10 thật xinh đẹp, vui vẻ và nhận được thật nhiều tình yêu thương. Yêu em nhiều nhất! 💖🌹",
+        "Mừng ngày Phụ nữ Việt Nam, chúc cô gái của anh luôn rạng rỡ như những bông hoa, công việc thuận lợi và mãi mãi ở bên anh nhé! ✨👑",
+        "Gửi em yêu! Chúc em ngày 20/10 hạnh phúc trọn vẹn. Mỗi phút giây bên em đều là món quà quý giá với anh! 🌷💝"
+      ],
+      sister: [
+        "Ngày 20/10, chúc chị/em gái luôn rạng rỡ, xinh đẹp, trẻ trung, gặp nhiều may mắn trong công việc và cuộc sống! 🌟🌸",
+        "Chúc chị/em gái ngày Phụ nữ Việt Nam tràn ngập niềm vui, nhận được thật nhiều hoa, nhiều quà và tình yêu thương! 💐❤️",
+        "Mừng 20/10! Chúc chị/em gái ngày càng bùng nổ nhan sắc, mua sắm không cần nhìn giá và luôn hạnh phúc nhé! 🛍️✨",
+        "Chúc em gái 20/10 xinh xắn, vui tươi, học giỏi, nhận được thật nhiều quà và luôn là niềm tự hào của gia đình! 🧸💓"
+      ],
+      teacher: [
+        "Nhân ngày 20/10, em xin kính chúc Cô luôn mạnh khỏe, hạnh phúc và giữ vững ngọn lửa nhiệt huyết với sự nghiệp trồng người! 💐📖",
+        "Kính chúc Cô giáo ngày Phụ nữ Việt Nam thật nhiều niềm vui, luôn xinh đẹp và công tác tốt! 🌸✨"
+      ],
+      friend: [
+        "Chúc bạn thân mến ngày 20/10 luôn tươi trẻ, xinh đẹp, thành công trong công việc và sớm có người rước nhé! 🥳🌸",
+        "Mừng ngày 20/10, chúc bạn luôn vui vẻ, nhận được thật nhiều hoa, nhiều quà và mãi mãi xinh tươi rạng rỡ! 💐🎁"
+      ]
+    };
+
+    let selectedCategory = 'sister'; // Mặc định chọn Chị/Em gái
+
+    function selectCategory(cat) {
+      selectedCategory = cat;
+      document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('btn-selected'));
+      const activeBtn = document.getElementById(`btn-${cat}`);
+      if (activeBtn) activeBtn.classList.add('btn-selected');
+    }
+
+    // Tự chọn mặc định Chị/Em gái khi tải trang
+    selectCategory('sister');
+
+    function generateWish() {
+      const senderName = document.getElementById('sender-name').value.trim() || 'Một người thân';
+      const list = wishes[selectedCategory] || wishes.sister;
+      const chosenWish = list[Math.floor(Math.random() * list.length)];
+      
+      const labels = { mom: 'Mẹ Yêu', lover: 'Người Yêu', sister: 'Chị/Em Gái', teacher: 'Cô Giáo', friend: 'Bạn Bè' };
+
+      document.getElementById('card-message').innerText = `"${chosenWish}"`;
+      document.getElementById('card-to').innerText = `Gửi: ${labels[selectedCategory]}`;
+      document.getElementById('card-from').innerText = `Từ: ${senderName}`;
+      
+      document.getElementById('screen-setup').classList.add('hidden');
+      document.getElementById('screen-card').classList.remove('hidden');
+    }
+
+    function copyWish() {
+      const msg = document.getElementById('card-message').innerText;
+      const from = document.getElementById('card-from').innerText;
+      navigator.clipboard.writeText(`${msg}\n\n${from}\n✨ Chúc mừng ngày Phụ nữ Việt Nam 20/10 ✨`).then(() => {
+        alert('Đã sao chép lời chúc! Bạn dán gửi qua Zalo/Messenger nhé ❤️');
+      }).catch(() => {
+        alert('Đã chọn lời chúc, bạn bôi đen để copy nhé!');
+      });
+    }
+
+    function restartApp() {
+      document.getElementById('screen-card').classList.add('hidden');
+      document.getElementById('screen-setup').classList.remove('hidden');
+    }
+
+    // Canvas nhẹ nhàng cho di động
+    const canvas = document.getElementById('canvas-petals');
+    const ctx = canvas.getContext('2d');
+    let w = canvas.width = window.innerWidth;
+    let h = canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    });
+
+    const petals = Array.from({ length: 20 }, () => ({
+      x: Math.random() * w, y: Math.random() * h,
+      r: Math.random() * 6 + 4,
+      sy: Math.random() * 1 + 0.5,
+      sx: Math.random() * 0.6 - 0.3
+    }));
+
+    function anim() {
+      ctx.clearRect(0, 0, w, h);
+      ctx.fillStyle = 'rgba(244, 63, 94, 0.4)';
+      petals.forEach(p => {
+        p.y += p.sy; p.x += p.sx;
+        if (p.y > h) p.y = -10;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      requestAnimationFrame(anim);
+    }
+    anim();
+  </script>
+
+</body>
+</html>
